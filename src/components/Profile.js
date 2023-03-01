@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 export default function Profile() {
   const navigate = useNavigate();
   const contextBlog = useContext(context);
-  const { loadBlog, userBlog, user,getUserDetails,userDetails } = contextBlog;
+  const { loadBlog, userBlog, user, getUserDetails, userDetails } = contextBlog;
 
   useEffect(() => {
     if (localStorage.getItem("blogToken")) {
       loadBlog();
-      getUserDetails()
+      getUserDetails();
     } else {
       navigate("./login");
     }
@@ -22,13 +22,12 @@ export default function Profile() {
     return str;
   };
 
-  const handleEditProfile =()=>{
+  const handleEditProfile = () => {
     navigate("../userdetails");
-  }
-
+  };
 
   return (
-    <>
+    <div>
       <section className="h-100 gradient-custom-2 w-100" style={{}}>
         <div className=" py-0 h-100 w-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
@@ -60,7 +59,13 @@ export default function Profile() {
                   </div>
                   <div className="ms-3" style={{ marginTop: "110px" }}>
                     <h5>{user.name}</h5>
-                    <p className="">{userDetails.length>0?`${capitaliz(userDetails[0].city)}, ${capitaliz(userDetails[0].state)}, ${capitaliz(userDetails[0].country)}.`:""}</p>
+                    <p className="">
+                      {userDetails.length > 0
+                        ? `${capitaliz(userDetails[0].city)}, ${capitaliz(
+                            userDetails[0].state
+                          )}, ${capitaliz(userDetails[0].country)}.`
+                        : ""}
+                    </p>
                   </div>
                 </div>
                 <div
@@ -69,7 +74,9 @@ export default function Profile() {
                 >
                   <div className="d-flex justify-content-end justify-content-sm-end flex-column flex-sm-row text-center py-0 px-5 ">
                     <div className="text-center  mx-3 mx-sm-4 mx-md-2 mx-lg-5 px-sm-1 px-md-5 px-lg-5 my-1 my-sm-0">
-                      <p className="mb-1 h5">{userBlog.length>0?userBlog.length:0}</p>
+                      <p className="mb-1 h5">
+                        {userBlog.length > 0 ? userBlog.length : 0}
+                      </p>
                       <p className="small text-muted mb-0">Photos</p>
                     </div>
                     <div className="text-center  mx-5 mx-sm-4 mx-md-2 mx-lg-5 px-sm-0 px-md-5 px-lg-5 my-1 my-sm-0">
@@ -92,10 +99,29 @@ export default function Profile() {
                       className="p-4"
                       style={{ backgroundColor: "rgb(229 230 231)" }}
                     >
-                      <p className="font-italic mb-1">{userDetails.length>0?userDetails[0].profession:""}</p>
-                      <p className="font-italic mb-1">Lives in {userDetails.length>0?capitaliz(userDetails[0].country):""}</p>
-                      <p className="font-italic mb-0"><strong>Gender </strong>{userDetails.length>0?capitaliz(userDetails[0].gender):""}</p>
-                      <p className="font-italic mb-0"><strong>Birth Date </strong>{userDetails.length>0?capitaliz(userDetails[0].dateOfBirth):""}</p>
+                      <p className="font-italic mb-1">
+                        {userDetails.length > 0
+                          ? userDetails[0].profession
+                          : ""}
+                      </p>
+                      <p className="font-italic mb-1">
+                        Lives in{" "}
+                        {userDetails.length > 0
+                          ? capitaliz(userDetails[0].country)
+                          : ""}
+                      </p>
+                      <p className="font-italic mb-0">
+                        <strong>Gender </strong>
+                        {userDetails.length > 0
+                          ? capitaliz(userDetails[0].gender)
+                          : ""}
+                      </p>
+                      <p className="font-italic mb-0">
+                        <strong>Birth Date </strong>
+                        {userDetails.length > 0
+                          ? capitaliz(userDetails[0].dateOfBirth)
+                          : ""}
+                      </p>
                     </div>
                   </div>
                   <div className="d-flex justify-content-between align-items-center mb-4">
@@ -136,6 +162,6 @@ export default function Profile() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

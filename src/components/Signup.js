@@ -1,20 +1,19 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import loginBg from "../sources/signinBg.jpg";
 import icon from "../sources/icon.png";
 import { useNavigate } from "react-router-dom";
-import context  from "../contextAPI/context";
-
+import context from "../contextAPI/context";
 
 export default function Signup() {
-  const alertContext = useContext(context)
-  const {showAlert} = alertContext
+  const alertContext = useContext(context);
+  const { showAlert } = alertContext;
   const [user, setUser] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
   });
-  
+
   const navigate = useNavigate();
 
   const handleOnChange = (e) => {
@@ -33,37 +32,36 @@ export default function Signup() {
     const json = await response.json();
     if (!json.success) {
       if (json.error) {
-        showAlert( json.error, "danger")
+        showAlert(json.error, "danger");
       } else {
-        showAlert( "Invelid credentials", "danger")
+        showAlert("Invelid credentials", "danger");
       }
     } else {
-      showAlert("Account created Successfully.", "success")
+      showAlert("Account created Successfully.", "success");
       navigate("/login");
     }
   };
   return (
-    <>
-      <div className="d-flex justify-content-center align-items-center">
+    <div className="d-flex justify-content-center align-items-center">
       <img
-      className="p-0 m-0"
-      src={loginBg}
-      style={{
-        width: "100%",
-        height:"800px",
-        position: "relative",
-        filter: "brightness(0.5)",
+        className="p-0 m-0"
+        src={loginBg}
+        style={{
+          width: "100%",
+          height: "800px",
+          position: "relative",
+          filter: "brightness(0.5)",
         }}
         height="800"
         alt="bg"
       ></img>
       <div
-           className=" text-center position-absolute"
-           style={{
-             width:"250px"
-           }}
+        className=" text-center position-absolute"
+        style={{
+          width: "250px",
+        }}
       >
-         <div className="form-signin d-flex justify-content-center align-items-center ">
+        <div className="form-signin d-flex justify-content-center align-items-center ">
           <form className="w-100">
             <img className="mb-4" src={icon} alt="" width="80" />
             <h1 className="h3 mb-3 text-white fw-normal">Please sign up</h1>
@@ -134,7 +132,6 @@ export default function Signup() {
           </form>
         </div>
       </div>
-      </div> 
-    </>
+    </div>
   );
 }

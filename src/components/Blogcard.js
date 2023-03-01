@@ -56,7 +56,7 @@ export default function Blogcard(props) {
   }
 
   return (
-    <div className="card" style={{ width: "25rem" }}>
+    <div className="card" style={{ width: "25rem",backgroundColor:"inherit",borderRadius:"10px" }}>
       <div className="d-flex justify-content-left align-items-center mx-3 my-1">
         <img src={UserIcon} className="" alt="" width="25" />
         <p className="text-muted p-2 m-0">{name}</p>

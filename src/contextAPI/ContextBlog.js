@@ -1,16 +1,17 @@
-import context from "./context";
 import { useState } from "react";
+import context from "./context";
 
-const ContextBlog = (props) => {
+function ContextBlog(props) {
   const [alert, setAlert] = useState(null);
   const [userBlog, setUserBlog] = useState([]);
   const [user, setUser] = useState({});
+  const [alluser, setAllUser] = useState([]);
   const [userDetails, setUserDetails] = useState([]);
 
   const showAlert = (massage, type) => {
     setAlert({
       msg: massage,
-      type: type,
+      type,
     });
     setTimeout(() => {
       setAlert(null);
@@ -33,6 +34,21 @@ const ContextBlog = (props) => {
     }
   };
 
+  const loadUser = async () => {
+    const user = localStorage.getItem("blogToken");
+    const response = await fetch("http://localhost:5000/user/getalluser", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const res = await response.json();
+    if (res.success) {
+      setAllUser(res.details)
+      showAlert(res.msg, "success");
+    } else {
+      showAlert(res.error, "danger");
+    }
+  };
+
   const deleteEndPoint = async (id) => {
     const user = localStorage.getItem("blogToken");
     const response = await fetch(
@@ -48,9 +64,7 @@ const ContextBlog = (props) => {
     const res = await response.json();
     if (res.success) {
       console.log(res.deleteblog);
-      const deletedBlog = userBlog.filter((blog) => {
-        return blog._id !== id;
-      });
+      const deletedBlog = userBlog.filter((blog) => blog._id !== id);
       setUserBlog(deletedBlog);
       showAlert("Blog deleted Successfully.", "success");
     } else {
@@ -85,7 +99,7 @@ const ContextBlog = (props) => {
     const res = await response.json();
     if (res.success) {
       console.log("edit", res.getblog);
-      let blogArray = userBlog;
+      const blogArray = userBlog;
       for (let index = 0; index < blogArray.length; index++) {
         const element = blogArray[index];
         if (element._id === res.getblog._id) {
@@ -102,7 +116,7 @@ const ContextBlog = (props) => {
 
   const createUserDetails = async (details) => {
     const user = localStorage.getItem("blogToken");
-    console.log("details ",details)
+    console.log("details ", details);
     const response = await fetch(
       "http://localhost:5000/user/createuserdetails",
       {
@@ -113,8 +127,8 @@ const ContextBlog = (props) => {
     );
     const res = await response.json();
     if (res.success) {
-      const details = res.details
-      console.log(details)
+      const { details } = res;
+      console.log(details);
       setUserDetails([details]);
       showAlert(res.msg, "success");
     } else {
@@ -122,7 +136,6 @@ const ContextBlog = (props) => {
     }
   };
 
-  
   const getUserDetails = async () => {
     const user = localStorage.getItem("blogToken");
     const response = await fetch("http://localhost:5000/user/getuserdetails", {
@@ -131,26 +144,23 @@ const ContextBlog = (props) => {
     });
     const res = await response.json();
     if (res.success) {
-      if(res.details.length===0){
-        return false
-      }else{
-        console.log("RES details :",res.details)
-        setUserDetails([...res.details]);
-        showAlert(res.msg, "success");
-        return true
+      if (res.details.length === 0) {
+        return false;
       }
-    } else {
-      showAlert(res.error, "danger");
-      return false
+      console.log("RES details :", res.details);
+      setUserDetails([...res.details]);
+      showAlert(res.msg, "success");
+      return true;
     }
+    showAlert(res.error, "danger");
+    return false;
   };
 
-  const reset =()=>{
-    setUser({})
-    setUserBlog([])
-    setUserDetails([])
-  }
-
+  const reset = () => {
+    setUser({});
+    setUserBlog([]);
+    setUserDetails([]);
+  };
 
   return (
     <context.Provider
@@ -158,6 +168,7 @@ const ContextBlog = (props) => {
         userBlog,
         alert,
         user,
+        alluser,
         userDetails,
         deleteEndPoint,
         createBlog,
@@ -166,12 +177,13 @@ const ContextBlog = (props) => {
         editBlog,
         createUserDetails,
         getUserDetails,
-        reset
+        loadUser,
+        reset,
       }}
     >
       {props.children}
     </context.Provider>
   );
-};
+}
 
 export default ContextBlog;

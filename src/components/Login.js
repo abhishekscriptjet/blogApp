@@ -1,19 +1,18 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import loginBg from "../sources/signinBg.jpg";
 import icon from "../sources/icon.png";
 import { useNavigate } from "react-router-dom";
-import context  from "../contextAPI/context";
-
+import context from "../contextAPI/context";
 
 export default function Login() {
-  const alertContext = useContext(context)
-  const {showAlert,getUserDetails} = alertContext
+  const alertContext = useContext(context);
+  const { showAlert, getUserDetails } = alertContext;
 
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
- 
+
   const navigate = useNavigate();
 
   const handleOnChange = (e) => {
@@ -31,35 +30,33 @@ export default function Login() {
     });
     const json = await response.json();
     if (!json.success) {
-      if(json.error){
-        showAlert( json.error, "danger")
-      }else{
-        showAlert( "Invelid credentials", "danger")
+      if (json.error) {
+        showAlert(json.error, "danger");
+      } else {
+        showAlert("Invelid credentials", "danger");
       }
     } else {
       const token = json.token;
       localStorage.setItem("blogToken", token);
-      showAlert("Login Successfully.", "success")
-     const oldUser = await getUserDetails()
-     console.log(oldUser)
-     if(oldUser){
-       navigate("/");
-     }else{
-       navigate("/userdetails");
-     }
-
+      showAlert("Login Successfully.", "success");
+      const oldUser = await getUserDetails();
+      console.log(oldUser);
+      if (oldUser) {
+        navigate("/");
+      } else {
+        navigate("/userdetails");
+      }
     }
   };
 
   return (
-    <>
     <div className="d-flex justify-content-center align-items-center">
       <img
         className="p-0 m-0"
         src={loginBg}
         style={{
           width: "100%",
-          height:"800px",
+          height: "800px",
           position: "relative",
           filter: "brightness(0.5)",
         }}
@@ -69,7 +66,7 @@ export default function Login() {
       <div
         className=" text-center position-absolute"
         style={{
-          width:"250px"
+          width: "250px",
         }}
       >
         <div className="form-signin d-flex justify-content-center align-items-center ">
@@ -89,6 +86,7 @@ export default function Login() {
               />
               <label htmlFor="email">Email address</label>
             </div>
+            
             <div className="form-floating">
               <input
                 type="password"
@@ -118,7 +116,6 @@ export default function Login() {
           </form>
         </div>
       </div>
-      </div>
-    </>
+    </div>
   );
 }

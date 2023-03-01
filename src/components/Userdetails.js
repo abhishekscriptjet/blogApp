@@ -1081,7 +1081,7 @@ const Userdetails = (props) => {
   
 
   return (
-    <>
+    <div>
       <div
         className=" text-white d-flex justify-content-end align-items-center"
         style={{ marginTop: "70px", marginBottom: "0px" }}
@@ -1392,7 +1392,7 @@ const Userdetails = (props) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
