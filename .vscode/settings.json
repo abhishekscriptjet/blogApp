@@ -1,0 +1,11 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "typescript.tsserver.watchOptions": {
+
+    },
+    "editor.formatOnSave": true,
+    "javascript.format.enable": false,
+    "prettier.eslintIntegration": true,
+    
+    "javascript.validate.enable": false,
+}

@@ -5,82 +5,101 @@ const fetchuser = require("./fetchUser");
 const User = require("../schema/user");
 const router = express.Router();
 
-router.post(
-  "/createuserdetails",
-  fetchuser,
-  async (req, res) => {
-    try {
-      const userId = await req.userid;
-      const user = await User.findById(userId).select("-password");
-      let details = await UserDetails.findOne({userid:userId});
-      const { firstName, lastName, gender, dateOfBirth, city, state,country,pincode ,profession,profileImg} = req.body;
-      
+router.post("/createuserdetails", fetchuser, async (req, res) => {
+  try {
+    const userId = await req.userid;
+    const user = await User.findById(userId).select("-password");
+    let details = await UserDetails.findOne({ userid: userId });
+    const {
+      firstName,
+      lastName,
+      gender,
+      dateOfBirth,
+      city,
+      state,
+      country,
+      pincode,
+      profession,
+      profileImg,
+    } = req.body;
 
-      const userDetails = ({
-        userid: userId,
-        user:user,
-        firstName: firstName,
-        lastName: lastName,
-        gender: gender,
-        dateOfBirth: dateOfBirth,
-        city: city,
-        state: state,
-        country: country,
-        pincode: pincode,
-        profession: profession,
-        profileImg:profileImg
-      });
-      
-      if (user) {
-          
-          if(details===null){
-      
-            const userDetails = new UserDetails({
-                userid: userId,
-                user:user,
-                firstName: firstName,
-                lastName: lastName,
-                gender: gender,
-                dateOfBirth: dateOfBirth,
-                city: city,
-                state: state,
-                country: country,
-                pincode: pincode,
-                profession: profession,
-                profileImg:profileImg
-              });
-              const createUserDetails = await userDetails.save();
-          res.status(200).json({ success: true, details: createUserDetails, msg:"Details Added" });
-        }else if(details.userid.toString() === userId){
-            details = await UserDetails.findOneAndUpdate(
-                {userid:userId},
-                { $set: userDetails },
-                { new: true }
-              );
-              res.status(200).json({ success: true, details: details, msg:"Details Updated" });
-        }else{
-            res
-            .status(400)
-            .json({ success: false, error: "Already added Details" });
-        }
+    const userDetails = {
+      userid: userId,
+      user: user,
+      firstName: firstName,
+      lastName: lastName,
+      gender: gender,
+      dateOfBirth: dateOfBirth,
+      city: city,
+      state: state,
+      country: country,
+      pincode: pincode,
+      profession: profession,
+      profileImg: profileImg,
+    };
+
+    if (user) {
+      if (details === null) {
+        const userDetails = new UserDetails({
+          userid: userId,
+          user: user,
+          firstName: firstName,
+          lastName: lastName,
+          gender: gender,
+          dateOfBirth: dateOfBirth,
+          city: city,
+          state: state,
+          country: country,
+          pincode: pincode,
+          profession: profession,
+          profileImg: profileImg,
+        });
+        const createUserDetails = await userDetails.save();
+        res.status(200).json({
+          success: true,
+          details: createUserDetails,
+          msg: "Details Added",
+        });
+      } else if (details.userid.toString() === userId) {
+        details = await UserDetails.findOneAndUpdate(
+          { userid: userId },
+          { $set: userDetails },
+          { new: true }
+        );
+        res
+          .status(200)
+          .json({ success: true, details: details, msg: "Details Updated" });
       } else {
         res
           .status(400)
-          .json({ success: false, error: "Not allowed to add Details" });
+          .json({ success: false, error: "Already added Details" });
       }
-    } catch (error) {
-      res.status(400).json({ success: false, error: "Internal server error" });
-
+    } else {
+      res
+        .status(400)
+        .json({ success: false, error: "Not allowed to add Details" });
     }
+  } catch (error) {
+    res.status(400).json({ success: false, error: "Internal server error" });
   }
-);
+});
 
 router.get("/getuserdetails", fetchuser, async (req, res) => {
   try {
     const details = await UserDetails.find({ userid: req.userid });
-    res.status(200).json({ success: true, details: details ,msg:"Loaded"});
+    res.status(200).json({ success: true, details: details, msg: "Loaded" });
   } catch (error) {
-    res.status(400).json({ success: false, error:"Internel server error" });
+    res.status(400).json({ success: false, error: "Internel server error" });
+  }
+});
+
+router.get("/getalluser", async (req, res) => {
+  try {
+    const details = await UserDetails.find();
+    console.log("all user : ",details)
+    res.status(200).json({ success: true, details: details, msg: "Loaded" });
+  } catch (error) {
+    res.status(400).json({ success: false, error: "Internel server error" });
   }
 });
 
